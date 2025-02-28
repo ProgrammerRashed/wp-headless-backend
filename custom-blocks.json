@@ -1,0 +1,194 @@
+[
+    {
+        "id": "block_12345",
+        "name": "Testimonial",
+        "icon": "admin-comments",
+        "keywords": [
+            "Testimonial"
+        ],
+        "description": "Testimonial block with an image and text.",
+        "fields": [
+            {
+                "type": "text",
+                "name": "testimonial_text",
+                "label": "Testimonial Text"
+            },
+            {
+                "type": "text",
+                "name": "author_name",
+                "label": "Author Name"
+            },
+            {
+                "type": "image",
+                "name": "author_image",
+                "label": "Author Image"
+            }
+        ]
+    },
+    {
+        "id": "block_12346",
+        "name": "Featured Posts",
+        "icon": "admin-post",
+        "keywords": [
+            "Posts",
+            "Featured"
+        ],
+        "description": "A block to select featured posts.",
+        "fields": [
+            {
+                "type": "association",
+                "name": "featured_posts",
+                "label": "Select Featured Posts",
+                "types": [
+                    "post",
+                    "post"
+                ],
+                "max": 3
+            }
+        ]
+    },
+    {
+        "id": "block_12347",
+        "name": "Team Members",
+        "icon": "groups",
+        "keywords": [
+            "Team",
+            "Members"
+        ],
+        "description": "A block to showcase team members.",
+        "fields": [
+            {
+                "type": "complex",
+                "name": "team_members",
+                "label": "Team Members",
+                "layout": "tabbed-horizontal",
+                "sub_fields": [
+                    {
+                        "type": "text",
+                        "name": "member_name",
+                        "label": "Member Name"
+                    },
+                    {
+                        "type": "text",
+                        "name": "member_role",
+                        "label": "Member Role"
+                    },
+                    {
+                        "type": "image",
+                        "name": "member_image",
+                        "label": "Member Image"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "block_12348",
+        "name": "Blog Card",
+        "icon": "groups",
+        "keywords": [
+            "Team",
+            "Members"
+        ],
+        "description": "A block to showcase Blog Card.",
+        "fields": [
+            {
+                "type": "complex",
+                "name": "team_members",
+                "label": "Blog Card",
+                "layout": "tabbed-horizontal",
+                "sub_fields": [
+                    {
+                        "type": "text",
+                        "name": "member_name",
+                        "label": "Title"
+                    },
+                    {
+                        "type": "text",
+                        "name": "member_role",
+                        "label": "Member Role"
+                    },
+                    {
+                        "type": "image",
+                        "name": "member_image",
+                        "label": "Member Image"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "name": "pricing_tier",
+                "label": "Select Pricing Tier",
+                "options": {
+                    "basic": "Basic Plan",
+                    "standard": "Standard Plan",
+                    "premium": "Premium Plan"
+                }
+            }
+        ]
+    },
+    {
+        "id": "block_12349",
+        "name": "Color Scheme Selector",
+        "icon": "admin-appearance",
+        "keywords": [
+            "Color",
+            "Theme"
+        ],
+        "description": "A block to choose a color scheme.",
+        "fields": [
+            {
+                "type": "radio",
+                "name": "color_scheme",
+                "label": "Color Scheme",
+                "options": {
+                    "light": "Light Mode",
+                    "dark": "Dark Mode"
+                }
+            }
+        ]
+    },
+    {
+        "id": "block_12351",
+        "name": "Pricing Plan",
+        "icon": "money-alt",
+        "keywords": [
+            "Pricing",
+            "Plan"
+        ],
+        "description": "A block to select a pricing plan.",
+        "fields": [
+            {
+                "type": "select",
+                "name": "pricing_tier",
+                "label": "Select Pricing Tier",
+                "options": {
+                    "basic": "Basic Plan",
+                    "standard": "Standard Plan",
+                    "premium": "Premium Plan"
+                }
+            }
+        ]
+    },
+    {
+        "name": "Faq Block",
+        "icon": "admin-appearance",
+        "keywords": [
+            "faq-block"
+        ],
+        "description": "this is a faq block",
+        "fields": [
+            {
+                "type": "text",
+                "name": "question",
+                "label": "Question"
+            },
+            {
+                "type": "text",
+                "name": "answer",
+                "label": "answer"
+            }
+        ],
+        "id": "block_12352"
+    }
+]

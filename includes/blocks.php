@@ -48,6 +48,46 @@ function crb_register_custom_fields() {
         ->set_keywords([__('CTA', 'nh')])
         ->set_description(__('Call to Action block with a title and button.', 'nh'))
         ->set_render_callback(function ($fields, $attributes, $inner_blocks) {});
+
+           // Hero Block
+    Block::make(__('Seconder Hero', 'nh'))
+    ->add_fields(array(
+        Field::make('html', 'crb_information_text')
+            ->set_html('<h2>Hero Block</h2>'),
+        Field::make('text', 'title', __('Title', 'nh')),
+        Field::make('complex', 'hero_items', __('Hero Items', 'nh'))
+            ->set_layout('tabbed-horizontal')
+            ->add_fields(array(
+                Field::make('text', 'title', __('Title', 'nh')),
+                Field::make('file', 'image', __('Image'))
+                    ->set_value_type('url'),
+            ))
+    ))
+    ->set_icon('star-filled')
+    ->set_keywords([__('Hero Custom Block', 'nh')])
+    ->set_description(__('Custom Block', 'nh'))
+    ->set_render_callback(function ($fields, $attributes, $inner_blocks) {});
 }
 
 add_action('carbon_fields_register_fields', 'crb_register_custom_fields');
+
+
+function load_custom_blocks_from_json() {
+    $json_file = get_template_directory() . '/custom-blocks.json';
+    if (!file_exists($json_file)) return;
+
+    $blocks = json_decode(file_get_contents($json_file), true);
+    if (!$blocks) return;
+
+    foreach ($blocks as $block) {
+        Block::make(__($block['name'], 'nh'))
+            ->add_fields(array_map('generate_field', $block['fields']))
+            ->set_icon($block['icon'] ?? 'block-default')
+            ->set_keywords($block['keywords'] ?? [])
+            ->set_description($block['description'] ?? '')
+            ->set_render_callback(function ($fields) {
+                echo "<pre>" . print_r($fields, true) . "</pre>";
+            });
+    }
+}
+add_action('carbon_fields_register_fields', 'load_custom_blocks_from_json');
