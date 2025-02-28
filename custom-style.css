@@ -1,0 +1,308 @@
+/* Global Styles */
+.wp-block {
+    background-color: white !important;
+    color: black !important;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: unset !important;
+ 
+}
+
+.editor-styles-wrapper {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+   
+}
+
+
+
+/* BLOCK GENERATOR SYTLE  */
+.wrap {
+    margin: 20px 20px 0 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#generated-blocks {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+#generated-blocks .block-item {
+    border: 1px solid #0073aa;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    display: flex;
+    gap: 6px;
+}
+#generated-blocks a {
+    color: #0073aa;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#generated-blocks a:hover {
+    text-decoration: underline;
+}
+
+.block-details-inputs {
+    display: flex;
+    gap: 8px;
+    max-width: unset !important;
+    width: 100%;
+}
+.block-details-inputs .item{
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+button#add-field {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #2271b1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button#add-field:hover {
+    background: #1e639c;
+}
+
+
+
+#fields-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+#fields-container .field{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #2271b1;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#fields-container .main-fields{
+    display: flex;
+    gap: 5px;
+}
+#fields-container .main-fields .field-item{
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
+.sub-fields-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.sub-fields-container .sub-field{
+width: 100%;
+display: flex;
+gap: 5px;
+}
+.association-params{
+    margin-top: 0 !important;
+}
+.options-container{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+.options-container .option{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #0073aa;
+    outline: none;
+}
+button[type="button"]{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+}
+button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: #0073aa;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background: #005177;
+}
+
+button#add-field {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #2271b1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+button.add-option {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #2271b1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+button.add-sub-field {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #2271b1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button#add-field:hover {
+    background: #1e639c;
+}
+
+button.remove-field {
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+button.remove-sub-field {
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+button.remove-option{
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+button.remove-field:hover {
+    background: #cc0000;
+}
+
+/* General Styles */
+/* 
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+} */
+
+/* Form Styles */
+/* 
+
+#fields-container .field{
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+#fields-container .main-fields{
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+#fields-container .field .main-fields{
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+#fields-container .sub-fields-container{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+#fields-container .sub-fields-container .sub-field{
+    display: flex;
+    gap: 8px;
+} */
+/*  */
+
+/* Generated Blocks Styles */
+
+/* 
+
+.add-sub-field{
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #fff;
+    background: #2271b1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-block: 10px;
+} */

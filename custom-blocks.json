@@ -14,7 +14,6 @@
                 "name": "featured_posts",
                 "label": "Select Featured Posts",
                 "types": [
-                    "post",
                     "post"
                 ],
                 "max": 3
@@ -22,9 +21,8 @@
         ]
     },
     {
-        "id": "block_12347",
         "name": "Team Members",
-        "icon": "groups",
+        "icon": "layout",
         "keywords": [
             "Team",
             "Members"
@@ -35,7 +33,6 @@
                 "type": "complex",
                 "name": "team_members",
                 "label": "Team Members",
-                "layout": "tabbed-horizontal",
                 "sub_fields": [
                     {
                         "type": "text",
@@ -51,14 +48,20 @@
                         "type": "image",
                         "name": "member_image",
                         "label": "Member Image"
+                    },
+                    {
+                        "type": "text",
+                        "name": "order",
+                        "label": "Member order"
                     }
                 ]
             }
-        ]
+        ],
+        "id": "block_12347"
     },
     {
         "name": "Directors",
-        "icon": "dashicons-star-filled",
+        "icon": "layout",
         "keywords": [
             "director"
         ],
@@ -73,10 +76,87 @@
                 "type": "association",
                 "name": "directors",
                 "label": "Directors",
-                "types": ["member"], 
+                "types": [
+                    "member"
+                ],
                 "max": 1
             }
         ],
         "id": "block_67c1fdf0b6b8e9.73306385"
+    },
+    {
+        "name": "Faq Block",
+        "icon": "layout",
+        "keywords": [
+            "faq "
+        ],
+        "description": "this is a faq block",
+        "fields": [
+            {
+                "type": "text",
+                "name": "section_title",
+                "label": "Section Title"
+            },
+            {
+                "type": "complex",
+                "name": "faqs",
+                "label": "Faq Items",
+                "sub_fields": [
+                    {
+                        "type": "text",
+                        "name": "question",
+                        "label": "Question"
+                    },
+                    {
+                        "type": "text",
+                        "name": "answer",
+                        "label": "Answer"
+                    }
+                ]
+            }
+        ],
+        "id": "block_67c2094981b5f6.44356403"
+    },
+    {
+        "name": "Hero Banner Block",
+        "icon": "layout",
+        "keywords": [
+            "Hero Banner"
+        ],
+        "description": "This is hero banner block. ",
+        "fields": [
+            {
+                "type": "text",
+                "name": "banner_title",
+                "label": "Banner Title"
+            },
+            {
+                "type": "text",
+                "name": "banner_description",
+                "label": "Banner Description"
+            },
+            {
+                "type": "image",
+                "name": "banner_image",
+                "label": "Banner Image"
+            }
+        ],
+        "id": "block_67c21d8e9f2cd7.39213552"
+    },
+    {
+        "name": "Custom Slider Block",
+        "icon": "layout",
+        "keywords": [
+            "Slider Block"
+        ],
+        "description": "This is a slider blcok",
+        "fields": [
+            {
+                "type": "text",
+                "name": "slider_block",
+                "label": "Slider Title"
+            }
+        ],
+        "id": "block_67c220064ac577.98021540"
     }
 ]

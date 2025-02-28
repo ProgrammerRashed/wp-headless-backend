@@ -73,9 +73,9 @@ function render_block_generator_ui() {
 
             <h3>Block Details</h3>
             <div class="block-details-inputs">
-                <input type="text" id="block_name" name="block_name" placeholder="Block Name" value="<?php echo $edit_block ? esc_attr($edit_block['name']) : ''; ?>" required />
-                <input type="text" id="block_keywords" name="block_keywords" placeholder="Keywords (comma separated)" value="<?php echo $edit_block ? esc_attr(implode(',', $edit_block['keywords'])) : ''; ?>" />
-                <textarea id="block_description" name="block_description" placeholder="Block Description"><?php echo $edit_block ? esc_textarea($edit_block['description']) : ''; ?></textarea>
+                <input class="item" type="text" id="block_name" name="block_name" placeholder="Block Name" value="<?php echo $edit_block ? esc_attr($edit_block['name']) : ''; ?>" required />
+                <input class="item" type="text" id="block_keywords" name="block_keywords" placeholder="Keywords (comma separated)" value="<?php echo $edit_block ? esc_attr(implode(',', $edit_block['keywords'])) : ''; ?>" />
+                <textarea class="item" id="block_description" name="block_description" placeholder="Block Description"><?php echo $edit_block ? esc_textarea($edit_block['description']) : ''; ?></textarea>
             </div>
 
             <h3>Fields</h3>
@@ -84,7 +84,7 @@ function render_block_generator_ui() {
                     <?php foreach ($edit_block['fields'] as $field): ?>
                         <div class="field">
                             <div class="main-fields">
-                                <select class="field-type" name="field_type[]">
+                                <select class="field-type field-item" name="field_type[]">
                                     <option value="text" <?php selected($field['type'], 'text'); ?>>Text</option>
                                     <option value="image" <?php selected($field['type'], 'image'); ?>>Image</option>
                                     <option value="radio" <?php selected($field['type'], 'radio'); ?>>Radio</option>
@@ -93,17 +93,17 @@ function render_block_generator_ui() {
                                     <option value="complex" <?php selected($field['type'], 'complex'); ?>>Complex</option>
                                     <option value="rich_text" <?php selected($field['type'], 'rich_text'); ?>>Rich Text</option>
                                 </select>
-                                <input type="text" class="field-name" name="field_name[]" placeholder="Field Name" value="<?php echo esc_attr($field['name']); ?>" required />
-                                <input type="text" class="field-label" name="field_label[]" placeholder="Field Label" value="<?php echo esc_attr($field['label']); ?>" required />
+                                <input type="text" class="field-name field-item" name="field_name[]" placeholder="Field Name" value="<?php echo esc_attr($field['name']); ?>" required />
+                                <input type="text" class="field-label field-item" name="field_label[]" placeholder="Field Label" value="<?php echo esc_attr($field['label']); ?>" required />
                                 
                                 <!-- Association Parameters -->
                                 <?php if ($field['type'] === 'association'): ?>
-                                    <div class="association-params">
-                                        <input type="text" class="association-types" 
+                                    <div class="association-params field-item">
+                                        <input type="text" class="association-types field-item" 
                                             value="<?php echo esc_attr(implode(',', $field['types'] ?? [])); ?>" 
                                             placeholder="Post Types (comma-separated)" 
                                         />
-                                        <input type="number" class="association-max" 
+                                        <input type="number" class="association-max field-item" 
                                             value="<?php echo esc_attr($field['max'] ?? 0); ?>" 
                                             placeholder="Max Items" 
                                         />
@@ -127,13 +127,15 @@ function render_block_generator_ui() {
                                                         value="<?php echo esc_attr($value); ?>" 
                                                         placeholder="Value" required 
                                                     />
-                                                    <button type="button" class="remove-option">❌</button>
+                                                    <button type="button" class="remove-option field-item">❌ Delete Option</button>
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
                                         <button type="button" class="add-option">+ Add Option</button>
                                     </div>
                                 <?php endif; ?>
+
+                                <button type="button" class="remove-field field-item">❌ Delete Field</button>
                             </div>
 
                             <!-- Sub Fields for Complex -->
@@ -143,22 +145,22 @@ function render_block_generator_ui() {
                                     <div class="sub-fields-container">
                                         <?php foreach ($field['sub_fields'] as $sub_field): ?>
                                             <div class="sub-field">
-                                                <select class="sub-field-type" 
+                                                <select class="sub-field-type field-item" 
                                                     name="sub_fields[<?php echo esc_attr($field['name']); ?>][][type]">
                                                     <option value="text" <?php selected($sub_field['type'], 'text'); ?>>Text</option>
                                                     <option value="image" <?php selected($sub_field['type'], 'image'); ?>>Image</option>
                                                 </select>
-                                                <input type="text" class="sub-field-name" 
+                                                <input type="text" class="sub-field-name field-item" 
                                                     name="sub_fields[<?php echo esc_attr($field['name']); ?>][][name]" 
                                                     value="<?php echo esc_attr($sub_field['name']); ?>" 
                                                     placeholder="Sub-field Name" required 
                                                 />
-                                                <input type="text" class="sub-field-label" 
+                                                <input type="text" class="sub-field-label field-item" 
                                                     name="sub_fields[<?php echo esc_attr($field['name']); ?>][][label]" 
                                                     value="<?php echo esc_attr($sub_field['label']); ?>" 
                                                     placeholder="Sub-field Label" required 
                                                 />
-                                                <button type="button" class="remove-sub-field">❌</button>
+                                                <button type="button" class="remove-sub-field field-item">❌ Delete Field</button>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
@@ -166,7 +168,6 @@ function render_block_generator_ui() {
                                 </div>
                             <?php endif; ?>
 
-                            <button type="button" class="remove-field">❌ Delete Field</button>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>

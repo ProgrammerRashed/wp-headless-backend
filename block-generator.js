@@ -3,25 +3,27 @@ jQuery(document).ready(function($) {
     $("#add-field").click(function() {
         $("#fields-container").append(`
             <div class="field">
-                <select class="field-type">
-                    <option value="text">Text</option>
-                    <option value="image">Image</option>
-                    <option value="radio">Radio</option>
-                    <option value="select">Select</option>
-                    <option value="association">Association</option>
-                    <option value="complex">Complex</option>
-                    <option value="rich_text">Rich Text</option>
-                </select>
-                <input type="text" class="field-name" placeholder="Field Name" required />
-                <input type="text" class="field-label" placeholder="Field Label" required />
-                
-                <!-- Association Parameters -->
-                <div class="association-params" style="display: none; margin-top: 10px;">
-                    <input type="text" class="association-types" placeholder="Post Types (e.g., post,page)" style="width: 100%; margin-bottom: 5px;" />
-                    <input type="number" class="association-max" placeholder="Max Items" style="width: 100%;" />
+                <div class="main-fields">
+                    <select class="field-type field-item">
+                        <option value="text">Text</option>
+                        <option value="image">Image</option>
+                        <option value="radio">Radio</option>
+                        <option value="select">Select</option>
+                        <option value="association">Association</option>
+                        <option value="complex">Complex</option>
+                        <option value="rich_text">Rich Text</option>
+                    </select>
+                    <input type="text" class="field-name field-item" placeholder="Field Name" required />
+                    <input type="text" class="field-label field-item" placeholder="Field Label" required />
+
+                    <!-- Association Parameters -->
+                    <div class="association-params field-item" style="display: none; margin-top: 10px;">
+                        <input type="text" class="association-types field-item" placeholder="Post Types (e.g., post,page)" />
+                        <input type="number" class="association-max field-item" placeholder="Max Items" />
+                    </div>
+
+                    <button type="button" class="remove-field field-item">❌ Delete Field</button>
                 </div>
-                
-                <button type="button" class="remove-field">❌ Delete Field</button>
             </div>
         `);
     });
@@ -30,7 +32,7 @@ jQuery(document).ready(function($) {
     $(document).on("change", ".field-type", function() {
         const fieldType = $(this).val();
         const $field = $(this).closest(".field");
-        
+
         // Show/hide association parameters
         if (fieldType === "association") {
             $field.find(".association-params").show();
@@ -38,32 +40,83 @@ jQuery(document).ready(function($) {
             $field.find(".association-params").hide();
         }
 
-        // Existing logic for sub-fields and options
+        // Handle Sub-Fields (Complex Fields)
         if (fieldType === "complex") {
             $field.find(".sub-fields").remove();
             $field.append(`
                 <div class="sub-fields">
                     <h4>Sub Fields</h4>
                     <div class="sub-fields-container"></div>
-                    <button type="button" class="add-sub-field">+ Add Sub Field</button>
+                    <button type="button" class="add-sub-field field-item">+ Add Sub Field</button>
                 </div>
             `);
         } else {
             $field.find(".sub-fields").remove();
         }
 
+        // Handle Options (Select/Radio)
         if (["select", "radio"].includes(fieldType)) {
             $field.find(".options").remove();
             $field.append(`
                 <div class="options">
                     <h4>Options</h4>
                     <div class="options-container"></div>
-                    <button type="button" class="add-option">+ Add Option</button>
+                    <button type="button" class="add-option field-item">+ Add Option</button>
                 </div>
             `);
         } else {
             $field.find(".options").remove();
         }
+    });
+
+    // Add Option Button (for Select/Radio Fields)
+    $(document).on("click", ".add-option", function() {
+        const $container = $(this).siblings(".options-container");
+
+        $container.append(`
+            <div class="option field-item">
+                <input type="text" class="option-key" placeholder="Option Key" required />
+                <input type="text" class="option-value" placeholder="Option Value" required />
+                <button type="button" class="remove-option field-item">❌ Delete Option</button>
+            </div>
+        `);
+    });
+
+    // Remove Option
+    $(document).on("click", ".remove-option", function() {
+        $(this).closest(".option").remove();
+    });
+
+    // Add Sub Field Button (for Complex Fields)
+    $(document).on("click", ".add-sub-field", function() {
+        const $container = $(this).siblings(".sub-fields-container");
+
+        $container.append(`
+            <div class="sub-field field-item">
+                <select class="sub-field-type field-item">
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                    <option value="radio">Radio</option>
+                    <option value="select">Select</option>
+                    <option value="association">Association</option>
+                    <option value="complex">Complex</option>
+                    <option value="rich_text">Rich Text</option>
+                </select>
+                <input type="text" class="sub-field-name field-item" placeholder="Sub Field Name" required />
+                <input type="text" class="sub-field-label field-item" placeholder="Sub Field Label" required />
+                <button type="button" class="remove-sub-field field-item">❌ Delete Field</button>
+            </div>
+        `);
+    });
+
+    // Remove Sub Field
+    $(document).on("click", ".remove-sub-field", function() {
+        $(this).closest(".sub-field").remove();
+    });
+
+    // Remove Field
+    $(document).on("click", ".remove-field", function() {
+        $(this).closest(".field").remove();
     });
 
     // Handle Form Submission
@@ -115,8 +168,8 @@ jQuery(document).ready(function($) {
         });
 
         let block = {
-            name: $("#block_name").val(),
-            icon: "dashicons-star-filled",
+            name: "Custom " + $("#block_name").val(),
+            icon: "layout",
             keywords: $("#block_keywords").val().split(","),
             description: $("#block_description").val(),
             fields: fields
@@ -139,6 +192,4 @@ jQuery(document).ready(function($) {
             }
         }, "json");
     });
-
 });
-

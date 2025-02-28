@@ -18,7 +18,7 @@ function crb_register_custom_fields() {
 
     foreach ($blocks as $block) {
         $block_name = __($block['name'], 'nh');
-        $block_icon = $block['icon'] ?? 'block-default';
+        $block_icon = $block['icon'] ?? 'layout';
         $block_keywords = array_map('__', $block['keywords'] ?? []);
         $block_description = __($block['description'] ?? '', 'nh');
 

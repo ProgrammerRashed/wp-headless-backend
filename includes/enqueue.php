@@ -37,8 +37,8 @@ function enqueue_admin_scripts() {
 
     // Enqueue CSS
     wp_enqueue_style(
-        'block-generator-style',
-        get_template_directory_uri() . '/block-generator.css', 
+        'custom-style',
+        get_template_directory_uri() . '/custom-style.css', 
         array(),
         wp_get_theme()->get('Version') 
     );
