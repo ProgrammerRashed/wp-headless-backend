@@ -1,31 +1,5 @@
 [
     {
-        "id": "block_12345",
-        "name": "Testimonial",
-        "icon": "admin-comments",
-        "keywords": [
-            "Testimonial"
-        ],
-        "description": "Testimonial block with an image and text.",
-        "fields": [
-            {
-                "type": "text",
-                "name": "testimonial_text",
-                "label": "Testimonial Text"
-            },
-            {
-                "type": "text",
-                "name": "author_name",
-                "label": "Author Name"
-            },
-            {
-                "type": "image",
-                "name": "author_image",
-                "label": "Author Image"
-            }
-        ]
-    },
-    {
         "id": "block_12346",
         "name": "Featured Posts",
         "icon": "admin-post",
@@ -83,112 +57,26 @@
         ]
     },
     {
-        "id": "block_12348",
-        "name": "Blog Card",
-        "icon": "groups",
+        "name": "Directors",
+        "icon": "dashicons-star-filled",
         "keywords": [
-            "Team",
-            "Members"
+            "director"
         ],
-        "description": "A block to showcase Blog Card.",
-        "fields": [
-            {
-                "type": "complex",
-                "name": "team_members",
-                "label": "Blog Card",
-                "layout": "tabbed-horizontal",
-                "sub_fields": [
-                    {
-                        "type": "text",
-                        "name": "member_name",
-                        "label": "Title"
-                    },
-                    {
-                        "type": "text",
-                        "name": "member_role",
-                        "label": "Member Role"
-                    },
-                    {
-                        "type": "image",
-                        "name": "member_image",
-                        "label": "Member Image"
-                    }
-                ]
-            },
-            {
-                "type": "select",
-                "name": "pricing_tier",
-                "label": "Select Pricing Tier",
-                "options": {
-                    "basic": "Basic Plan",
-                    "standard": "Standard Plan",
-                    "premium": "Premium Plan"
-                }
-            }
-        ]
-    },
-    {
-        "id": "block_12349",
-        "name": "Color Scheme Selector",
-        "icon": "admin-appearance",
-        "keywords": [
-            "Color",
-            "Theme"
-        ],
-        "description": "A block to choose a color scheme.",
-        "fields": [
-            {
-                "type": "radio",
-                "name": "color_scheme",
-                "label": "Color Scheme",
-                "options": {
-                    "light": "Light Mode",
-                    "dark": "Dark Mode"
-                }
-            }
-        ]
-    },
-    {
-        "id": "block_12351",
-        "name": "Pricing Plan",
-        "icon": "money-alt",
-        "keywords": [
-            "Pricing",
-            "Plan"
-        ],
-        "description": "A block to select a pricing plan.",
-        "fields": [
-            {
-                "type": "select",
-                "name": "pricing_tier",
-                "label": "Select Pricing Tier",
-                "options": {
-                    "basic": "Basic Plan",
-                    "standard": "Standard Plan",
-                    "premium": "Premium Plan"
-                }
-            }
-        ]
-    },
-    {
-        "name": "Faq Block",
-        "icon": "admin-appearance",
-        "keywords": [
-            "faq-block"
-        ],
-        "description": "this is a faq block",
+        "description": "this is director block",
         "fields": [
             {
                 "type": "text",
-                "name": "question",
-                "label": "Question"
+                "name": "section_title",
+                "label": "Section Title"
             },
             {
-                "type": "text",
-                "name": "answer",
-                "label": "answer"
+                "type": "association",
+                "name": "directors",
+                "label": "Directors",
+                "types": ["member"], 
+                "max": 1
             }
         ],
-        "id": "block_12352"
+        "id": "block_67c1fdf0b6b8e9.73306385"
     }
 ]

@@ -7,7 +7,7 @@ function create_post_type()
 
             // Members
             register_post_type(
-            'members',
+            'member',
             array(
             'labels' => array(
                 'name' => __('Members'),

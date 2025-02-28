@@ -6,7 +6,7 @@ use Carbon_Fields\Field;
 function Postmeta() {
     // Register custom fields for the 'members' post type
     Container::make('post_meta', 'Custom Data')
-        ->where('post_type', '=', 'members')
+        ->where('post_type', '=', 'member')
         ->add_fields(array(
             Field::make('text', 'position', 'Position'),
             // Add more fields as needed

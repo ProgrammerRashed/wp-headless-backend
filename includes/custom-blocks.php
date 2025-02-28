@@ -60,9 +60,17 @@ function generate_field($field) {
                 ->set_default_value(array_key_first($field['options']));
 
         case 'association':
+            $types = array_map(fn($type) => ['type' => trim($type)], $field['types'] ?? ['post']);
+            $max = intval($field['max'] ?? 0);
+        
             return Field::make('association', $field['name'], __($field['label'], 'nh'))
-                ->set_types(array_map(fn($type) => ['type' => $type], $field['types']))
-                ->set_max($field['max'] ?? 0);
+            ->set_types(array_map(function($type) {
+                return [
+                    'type' => 'post',
+                    'post_type' => $type,
+                ];
+            }, $types))
+                ->set_max($max);
 
         case 'complex':
             $complex_field = Field::make('complex', $field['name'], __($field['label'], 'nh'))
@@ -80,8 +88,5 @@ function generate_field($field) {
             return Field::make('text', $field['name'], __($field['label'], 'nh'));
     }
 }
-
-
-
 
 add_action('carbon_fields_register_fields', 'crb_register_custom_fields');
