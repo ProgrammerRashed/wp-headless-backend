@@ -308,7 +308,6 @@ add_action('wp_ajax_save_custom_blocks', function() {
 /*****************************************************************************/
 /******************* Render Custom Post Type Generator UI ********************/
 /*****************************************************************************/
-// Render the UI
 function render_cpt_generator_ui() {
     $json_file = get_template_directory() . '/custom-post-types.json';
     $existing_cpts = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
@@ -317,15 +316,18 @@ function render_cpt_generator_ui() {
         <h1>Custom Post Type Generator</h1>
         <p>Create or Edit Custom Post Types dynamically!</p>
 
-        <h3>Edit Existing Post Type</h3>
-        <select id="edit_cpt_selector">
-            <option value="">-- Select a CPT to Edit --</option>
-            <?php foreach ($existing_cpts as $index => $cpt): ?>
-                <option value="<?php echo esc_attr(json_encode(['index' => $index] + $cpt)); ?>">
-                    <?php echo esc_html($cpt['name'] ?? ''); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+        <h3>Manage Existing Post Types</h3>
+        <div class="cpt-select-container">
+            <select id="edit_cpt_selector">
+                <option value="">-- Select a CPT to Edit --</option>
+                <?php foreach ($existing_cpts as $index => $cpt): ?>
+                    <option value="<?php echo esc_attr(json_encode(['index' => $index] + $cpt)); ?>">
+                        <?php echo esc_html($cpt['name'] ?? ''); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <button type="button" id="delete-cpt" class="button button-danger" style="display: none;">Delete Selected CPT</button>
+        </div>
 
         <form id="cpt-generator-form">
             <h3>Post Type Details</h3>
@@ -337,7 +339,7 @@ function render_cpt_generator_ui() {
 
             <h3>Supports</h3>
             <div id="cpt-supports">
-                <?php $support_options = ['title', 'editor', 'thumbnail', 'custom-fields', 'revisions', 'excerpt', 'author', 'page-attributes']; ?>
+                <?php $support_options = ['title', 'editor', 'thumbnail', 'revisions', 'excerpt', 'author', 'page-attributes']; ?>
                 <?php foreach ($support_options as $option): ?>
                     <label><input type="checkbox" name="cpt_supports[]" value="<?php echo $option; ?>"> <?php echo ucfirst($option); ?></label>
                 <?php endforeach; ?>
@@ -361,6 +363,27 @@ function render_cpt_generator_ui() {
         </form>
     </div>
 
+    <style>
+        .cpt-select-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .button-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+        
+        .button-danger:hover {
+            background-color: #bb2d3b;
+            border-color: #bb2d3b;
+            color: white;
+        }
+    </style>
+
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Add ajaxurl and nonce to global scope
@@ -369,6 +392,7 @@ function render_cpt_generator_ui() {
 
         const fieldsContainer = document.getElementById("custom-fields-container");
         const form = document.getElementById("cpt-generator-form");
+        const deleteButton = document.getElementById("delete-cpt");
 
         // Add Custom Field
         document.getElementById("add-custom-field").addEventListener("click", function() {
@@ -398,6 +422,8 @@ function render_cpt_generator_ui() {
         // Edit Existing CPT
         document.getElementById("edit_cpt_selector").addEventListener("change", function() {
             const selectedData = this.value ? JSON.parse(this.value) : null;
+            deleteButton.style.display = this.value ? 'inline-block' : 'none';
+            
             if (!selectedData) return;
 
             document.getElementById("edit_cpt_index").value = selectedData.index;
@@ -432,6 +458,41 @@ function render_cpt_generator_ui() {
                     fieldsContainer.insertAdjacentHTML("beforeend", fieldHTML);
                 });
             }
+        });
+
+        // Delete CPT Handler
+        deleteButton.addEventListener("click", function() {
+            const selectedOption = document.getElementById("edit_cpt_selector").value;
+            if (!selectedOption || !confirm('Are you sure you want to delete this post type? This action cannot be undone!')) {
+                return;
+            }
+
+            const selectedData = JSON.parse(selectedOption);
+            
+            fetch(ajaxurl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    action: 'delete_custom_post_type',
+                    security: cptNonce,
+                    index: selectedData.index
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Success: ' + data.data.message);
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting.');
+            });
         });
 
         // Form Submission
@@ -486,7 +547,6 @@ function render_cpt_generator_ui() {
 /*****************************************************************************/
 /********************* AJAX Handler for Saving CPT ********************/
 /*****************************************************************************/
-
 add_action('wp_ajax_save_custom_post_type', 'handle_save_custom_post_type');
 function handle_save_custom_post_type() {
     check_ajax_referer('save_cpt_nonce', 'security');
@@ -504,7 +564,7 @@ function handle_save_custom_post_type() {
         wp_send_json_error(['message' => 'All required fields must be filled']);
     }
 
-    // Prepare CPT data
+    // Prepare CPT data with defaults
     $cpt_data = [
         'name' => sanitize_text_field($data['name']),
         'slug' => sanitize_title($data['slug']),
@@ -518,7 +578,19 @@ function handle_save_custom_post_type() {
                 'label' => sanitize_text_field($field['label']),
                 'type' => sanitize_text_field($field['type'])
             ];
-        }, $data['fields'] ?? [])
+        }, $data['fields'] ?? []),
+        
+        // Default values
+        'public' => true,
+        'has_archive' => true,
+        'show_in_rest' => true,
+        'rewrite' => [
+            'slug' => sanitize_title($data['slug']) // Use the provided slug
+        ],
+        'taxonomies' => ['category'],
+        'show_in_graphql' => true,
+        'graphql_single_name' => sanitize_title($data['singular'], '_'),
+        'graphql_plural_name' => sanitize_title($data['plural'], '_')
     ];
 
     // Update or add new entry
@@ -533,5 +605,35 @@ function handle_save_custom_post_type() {
         wp_send_json_success(['message' => 'Custom Post Type saved successfully']);
     } else {
         wp_send_json_error(['message' => 'Failed to save Custom Post Type']);
+    }
+}
+
+
+
+// Add AJAX handler for deletion
+add_action('wp_ajax_delete_custom_post_type', 'handle_delete_custom_post_type');
+function handle_delete_custom_post_type() {
+    check_ajax_referer('save_cpt_nonce', 'security');
+
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Unauthorized access']);
+    }
+
+    $index = isset($_POST['index']) ? intval($_POST['index']) : -1;
+    $json_file = get_template_directory() . '/custom-post-types.json';
+    $existing_cpts = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
+
+    if ($index === -1 || !isset($existing_cpts[$index])) {
+        wp_send_json_error(['message' => 'Invalid post type selection']);
+    }
+
+    // Remove the CPT entry
+    array_splice($existing_cpts, $index, 1);
+
+    // Save updated list
+    if (file_put_contents($json_file, json_encode($existing_cpts, JSON_PRETTY_PRINT))) {
+        wp_send_json_success(['message' => 'Custom Post Type deleted successfully']);
+    } else {
+        wp_send_json_error(['message' => 'Failed to delete Custom Post Type']);
     }
 }
