@@ -76,7 +76,7 @@ add_action('admin_menu', function() {
 
 function render_block_generator_ui() {
     ?>
-    <div class="wrap">
+    <div class="custom-wrap">
         <h1>Carbon Fields Block Generator</h1>
         <p>Create custom blocks for Carbon Fields without writing code!</p>
 
@@ -312,7 +312,7 @@ function render_cpt_generator_ui() {
     $json_file = get_template_directory() . '/custom-post-types.json';
     $existing_cpts = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
     ?>
-    <div class="wrap">
+    <div class="custom-wrap">
         <h1>Custom Post Type Generator</h1>
         <p>Create or Edit Custom Post Types dynamically!</p>
 
@@ -331,11 +331,14 @@ function render_cpt_generator_ui() {
 
         <form id="cpt-generator-form">
             <h3>Post Type Details</h3>
-            <input type="hidden" id="edit_cpt_index" name="edit_cpt_index" value="">
-            <input type="text" id="cpt_name" name="cpt_name" placeholder="Post Type Name" required>
-            <input type="text" id="cpt_slug" name="cpt_slug" placeholder="Slug (e.g., portfolio)" required>
-            <input type="text" id="cpt_singular" name="cpt_singular" placeholder="Singular Label" required>
-            <input type="text" id="cpt_plural" name="cpt_plural" placeholder="Plural Label" required>
+            <div class="post-type-details">
+
+                <input type="hidden" id="edit_cpt_index" name="edit_cpt_index" value="">
+                <input type="text" id="cpt_name" name="cpt_name" placeholder="Post Type Name" required>
+                <input type="text" id="cpt_slug" name="cpt_slug" placeholder="Slug (e.g., portfolio)" required>
+                <input type="text" id="cpt_singular" name="cpt_singular" placeholder="Singular Label" required>
+                <input type="text" id="cpt_plural" name="cpt_plural" placeholder="Plural Label" required>
+            </div>
 
             <h3>Supports</h3>
             <div id="cpt-supports">

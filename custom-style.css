@@ -6,20 +6,15 @@
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: unset !important;
- 
 }
 
 .editor-styles-wrapper {
     background-color: #f0f0f0 !important;
     color: black !important;
-   
 }
 
-
-
-/* BLOCK GENERATOR SYTLE  */
-/* 
-.wrap {
+/* BLOCK GENERATOR STYLES - Scoped Under .custom-wrap */
+.custom-wrap {
     margin: 20px 20px 0 0;
     padding: 20px;
     background: #fff;
@@ -27,7 +22,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#generated-blocks {
+/* Generated Blocks */
+.custom-wrap #generated-blocks {
     margin-top: 20px;
     padding: 15px;
     background: #f9f9f9;
@@ -41,7 +37,7 @@
     gap: 6px;
 }
 
-#generated-blocks .block-item {
+.custom-wrap #generated-blocks .block-item {
     border: 1px solid #0073aa;
     text-decoration: none;
     font-weight: bold;
@@ -49,29 +45,34 @@
     display: flex;
     gap: 6px;
 }
-#generated-blocks a {
+
+.custom-wrap #generated-blocks a {
     color: #0073aa;
     text-decoration: none;
     font-weight: bold;
 }
 
-#generated-blocks a:hover {
+.custom-wrap #generated-blocks a:hover {
     text-decoration: underline;
 }
 
-.block-details-inputs {
+/* Input Fields */
+.custom-wrap .block-details-inputs {
     display: flex;
     gap: 8px;
-    max-width: unset !important;
     width: 100%;
 }
-.block-details-inputs .item{
+
+.custom-wrap .block-details-inputs .item {
     display: flex;
     width: 100%;
     align-items: center;
 }
 
-button#add-field {
+/* Buttons */
+.custom-wrap button#add-field,
+.custom-wrap button.add-option,
+.custom-wrap button.add-sub-field {
     padding: 8px 15px;
     font-size: 14px;
     color: #fff;
@@ -82,19 +83,21 @@ button#add-field {
     transition: background 0.3s ease;
 }
 
-button#add-field:hover {
+.custom-wrap button#add-field:hover,
+.custom-wrap button.add-option:hover,
+.custom-wrap button.add-sub-field:hover {
     background: #1e639c;
 }
 
-
-
-#fields-container{
+/* Fields Container */
+.custom-wrap #fields-container {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-bottom: 10px;
 }
-#fields-container .field{
+
+.custom-wrap #fields-container .field {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -104,44 +107,53 @@ button#add-field:hover {
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-#fields-container .main-fields{
+
+.custom-wrap #fields-container .main-fields {
     display: flex;
     gap: 5px;
 }
-#fields-container .main-fields .field-item{
+
+.custom-wrap #fields-container .main-fields .field-item {
     display: flex;
     gap: 5px;
     width: 100%;
 }
 
-.sub-fields-container{
+/* Sub Fields */
+.custom-wrap .sub-fields-container {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-bottom: 10px;
 }
-.sub-fields-container .sub-field{
-width: 100%;
-display: flex;
-gap: 5px;
+
+.custom-wrap .sub-fields-container .sub-field {
+    width: 100%;
+    display: flex;
+    gap: 5px;
 }
-.association-params{
+
+.custom-wrap .association-params {
     margin-top: 0 !important;
 }
-.options-container{
+
+/* Options Container */
+.custom-wrap .options-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-bottom: 10px;
 }
-.options-container .option{
+
+.custom-wrap .options-container .option {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-input[type="text"],
-textarea {
+/* Input Fields & Textareas */
+.custom-wrap input[type="text"],
+.custom-wrap textarea {
     width: 100%;
     padding: 10px;
     font-size: 14px;
@@ -150,7 +162,14 @@ textarea {
     transition: border-color 0.3s ease;
 }
 
-.field-checkbox{
+.custom-wrap input[type="text"]:focus,
+.custom-wrap textarea:focus {
+    border-color: #0073aa;
+    outline: none;
+}
+
+/* Checkboxes */
+.custom-wrap .field-checkbox {
     width: 40px !important;
     min-width: 40px !important;
     height: 40px !important;
@@ -158,92 +177,37 @@ textarea {
     align-items: center;
     justify-content: center;
     margin: auto !important;
-
 }
 
-input[type="text"]:focus,
-textarea:focus {
-    border-color: #0073aa;
-    outline: none;
-}
-button[type="button"]{
+/* Buttons */
+.custom-wrap button[type="button"],
+.custom-wrap button[type="submit"] {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-}
-button[type="submit"] {
-    padding: 10px 20px;
     font-size: 16px;
     color: #fff;
-    background: #0073aa;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.3s ease;
+    width: fit-content;
+}
+
+.custom-wrap button[type="submit"] {
+    background: #0073aa;
     width: 100%;
 }
 
-button[type="submit"]:hover {
+.custom-wrap button[type="submit"]:hover {
     background: #005177;
 }
 
-button#add-field {
-    padding: 8px 15px;
-    font-size: 14px;
-    color: #fff;
-    background: #2271b1;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-button.add-option {
-    padding: 8px 15px;
-    font-size: 14px;
-    color: #fff;
-    background: #2271b1;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-button.add-sub-field {
-    padding: 8px 15px;
-    font-size: 14px;
-    color: #fff;
-    background: #2271b1;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-button#add-field:hover {
-    background: #1e639c;
-}
-
-button.remove-field {
-    background: #ff4d4d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    width: 100%;
-}
-button.remove-sub-field {
-    background: #ff4d4d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    width: 100%;
-}
-button.remove-option{
+/* Remove Buttons */
+.custom-wrap button.remove-field,
+.custom-wrap button.remove-sub-field,
+.custom-wrap button.remove-option {
     background: #ff4d4d;
     color: #fff;
     border: none;
@@ -254,6 +218,36 @@ button.remove-option{
     width: 100%;
 }
 
-button.remove-field:hover {
+.custom-wrap button.remove-field:hover,
+.custom-wrap button.remove-sub-field:hover,
+.custom-wrap button.remove-option:hover {
     background: #cc0000;
-} */
+}
+
+
+#cpt-generator-form .post-type-details{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+}
+#cpt-generator-form #add-custom-field{
+    color: #0073aa;
+}
+#cpt-generator-form #custom-fields-container .custom-field{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+}
+#delete-cpt{
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: fit-content;
+}
+#edit_cpt_selector{
+   height: 45px;
+}
