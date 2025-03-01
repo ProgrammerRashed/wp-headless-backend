@@ -1,0 +1,100 @@
+[
+    {
+        "name": "Portfolio",
+        "slug": "portfolio",
+        "singular": "Portfolio Item",
+        "plural": "Portfolio Items",
+        "icon": "dashicons-portfolio",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail"
+        ],
+        "public": true,
+        "has_archive": true
+    },
+    {
+        "name": "Testimonials",
+        "slug": "testimonials",
+        "singular": "Testimonial",
+        "plural": "Testimonials",
+        "icon": "dashicons-testimonial",
+        "supports": [
+            "title",
+            "thumbnail"
+        ],
+        "public": true,
+        "has_archive": false
+    },
+    {
+        "name": "Members",
+        "slug": "member",
+        "singular": "Member",
+        "plural": "Members",
+        "icon": "dashicons-admin-users",
+        "supports": [
+            "title",
+            "thumbnail",
+            "custom-fields",
+            "excerpt"
+        ],
+        "public": true,
+        "has_archive": true,
+        "show_in_rest": true,
+        "rewrite": {
+            "slug": "members"
+        },
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "show_in_graphql": true,
+        "graphql_single_name": "member",
+        "graphql_plural_name": "members",
+        "fields": [
+            {
+                "name": "position",
+                "type": "text",
+                "label": "Position",
+                "graphql_type": "String"
+            },
+            {
+                "name": "linkedin",
+                "type": "url",
+                "label": "LinkedIn Profile",
+                "graphql_type": "String"
+            },
+            {
+                "name": "bio",
+                "type": "textarea",
+                "label": "Biography",
+                "graphql_type": "String"
+            },
+            {
+                "name": "email",
+                "type": "text",
+                "label": "Email Address",
+                "graphql_type": "String"
+            },
+            {
+                "name": "profile_picture",
+                "type": "image",
+                "label": "Profile Picture",
+                "graphql_type": "String"
+            }
+        ]
+    },
+    {
+        "name": "Project",
+        "slug": "project",
+        "singular": "Project",
+        "plural": "Projects",
+        "supports": [
+            "title",
+            "thumbnail",
+            "excerpt"
+        ],
+        "icon": "dashicons-admin-users",
+        "fields": []
+    }
+]

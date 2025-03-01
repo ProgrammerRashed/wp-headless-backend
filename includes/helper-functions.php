@@ -1,24 +1,47 @@
 <?php
 /*****************************************************************************/
- /***  Function to register custom GraphQL fields for a specific post type ***/
+ /*********  Function to register custom post type data to  GraphQL **********/
 /*****************************************************************************/
  
 
-function register_custom_graphql_fields($post_type, $fields) {
-    foreach ($fields as $field) {
-        register_graphql_field(ucfirst($post_type), $field['name'], [
-            'type' => $field['type'],
-            'description' => $field['description'],
-            'resolve' => function ($post) use ($field) {
-                return carbon_get_post_meta($post->ID, $field['meta_key']);
+
+function register_dynamic_graphql_fields() {
+    $json_file = get_template_directory() . '/custom-post-types.json';
+
+    if (!file_exists($json_file)) {
+        return;
+    }
+
+    $post_types = json_decode(file_get_contents($json_file), true);
+
+    if (!$post_types || !is_array($post_types)) {
+        return;
+    }
+
+    foreach ($post_types as $post_type) {
+        if (!empty($post_type['show_in_graphql']) && $post_type['show_in_graphql'] === true) {
+            $post_type_name = ucfirst($post_type['graphql_single_name'] ?? $post_type['slug']);
+
+            if (!empty($post_type['fields']) && is_array($post_type['fields'])) {
+                add_action('graphql_register_types', function () use ($post_type_name, $post_type) {
+                    foreach ($post_type['fields'] as $field) {
+                        register_graphql_field($post_type_name, $field['name'], [
+                            'type' => $field['graphql_type'] ?? 'String',
+                            'description' => $field['label'] ?? '',
+                            'resolve' => function ($post) use ($field) {
+                                return carbon_get_post_meta($post->ID, $field['name']);
+                            }
+                        ]);
+                    }
+                });
             }
-        ]);
+        }
     }
 }
-
+add_action('init', 'register_dynamic_graphql_fields');
 
 /*****************************************************************************/
- /**************** Add Admin Menu for Block Generator *********************/
+ /**************** Add Admin Menu for Block and CPT Generator *********************/
 /*****************************************************************************/
 
 add_action('admin_menu', function() {
@@ -32,6 +55,20 @@ add_action('admin_menu', function() {
         90 // Position
     );
 });
+
+
+add_action('admin_menu', function() {
+    add_menu_page(
+        'Custom Post Type Generator',
+        'CPT Generator',
+        'manage_options',
+        'custom-post-type-generator',
+        'render_cpt_generator_ui',
+        'dashicons-admin-generic',
+        90
+    );
+});
+
 
 /*****************************************************************************/
  /***************************  Render Block Generator UI *********************/
@@ -266,3 +303,235 @@ add_action('wp_ajax_save_custom_blocks', function() {
 
     wp_send_json_success(['message' => 'Block saved successfully!', 'blocks' => $blocks]);
 });
+
+
+/*****************************************************************************/
+/******************* Render Custom Post Type Generator UI ********************/
+/*****************************************************************************/
+// Render the UI
+function render_cpt_generator_ui() {
+    $json_file = get_template_directory() . '/custom-post-types.json';
+    $existing_cpts = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
+    ?>
+    <div class="wrap">
+        <h1>Custom Post Type Generator</h1>
+        <p>Create or Edit Custom Post Types dynamically!</p>
+
+        <h3>Edit Existing Post Type</h3>
+        <select id="edit_cpt_selector">
+            <option value="">-- Select a CPT to Edit --</option>
+            <?php foreach ($existing_cpts as $index => $cpt): ?>
+                <option value="<?php echo esc_attr(json_encode(['index' => $index] + $cpt)); ?>">
+                    <?php echo esc_html($cpt['name'] ?? ''); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <form id="cpt-generator-form">
+            <h3>Post Type Details</h3>
+            <input type="hidden" id="edit_cpt_index" name="edit_cpt_index" value="">
+            <input type="text" id="cpt_name" name="cpt_name" placeholder="Post Type Name" required>
+            <input type="text" id="cpt_slug" name="cpt_slug" placeholder="Slug (e.g., portfolio)" required>
+            <input type="text" id="cpt_singular" name="cpt_singular" placeholder="Singular Label" required>
+            <input type="text" id="cpt_plural" name="cpt_plural" placeholder="Plural Label" required>
+
+            <h3>Supports</h3>
+            <div id="cpt-supports">
+                <?php $support_options = ['title', 'editor', 'thumbnail', 'custom-fields', 'revisions', 'excerpt', 'author', 'page-attributes']; ?>
+                <?php foreach ($support_options as $option): ?>
+                    <label><input type="checkbox" name="cpt_supports[]" value="<?php echo $option; ?>"> <?php echo ucfirst($option); ?></label>
+                <?php endforeach; ?>
+            </div>
+
+            <h3>Select Icon</h3>
+            <select id="cpt_icon" name="cpt_icon">
+                <?php $dashicons = ['admin-post', 'admin-users', 'portfolio', 'testimonial', 'archive', 'clipboard', 'star-filled']; ?>
+                <?php foreach ($dashicons as $icon): ?>
+                    <option value="dashicons-<?php echo $icon; ?>"><?php echo ucfirst(str_replace('-', ' ', $icon)); ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <h3>Custom Fields</h3>
+            <div id="custom-fields-container"></div>
+            <button type="button" id="add-custom-field" class="button">+ Add Custom Field</button>
+
+            <br><br>
+            <?php wp_nonce_field('save_cpt_nonce', 'cpt_nonce'); ?>
+            <button type="submit" id="save-cpt" class="button button-primary">Save Custom Post Type</button>
+        </form>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add ajaxurl and nonce to global scope
+        window.ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+        const cptNonce = '<?php echo wp_create_nonce('save_cpt_nonce'); ?>';
+
+        const fieldsContainer = document.getElementById("custom-fields-container");
+        const form = document.getElementById("cpt-generator-form");
+
+        // Add Custom Field
+        document.getElementById("add-custom-field").addEventListener("click", function() {
+            const fieldHTML = `
+                <div class="custom-field" style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                    <input type="text" class="field-name" placeholder="Field Name" required>
+                    <input type="text" class="field-label" placeholder="Field Label" required>
+                    <select class="field-type">
+                        <option value="text">Text</option>
+                        <option value="textarea">Textarea</option>
+                        <option value="image">Image</option>
+                        <option value="checkbox">Checkbox</option>
+                    </select>
+                    <button type="button" class="button remove-field">Remove</button>
+                </div>
+            `;
+            fieldsContainer.insertAdjacentHTML("beforeend", fieldHTML);
+        });
+
+        // Remove Custom Field
+        fieldsContainer.addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-field")) {
+                e.target.closest(".custom-field").remove();
+            }
+        });
+
+        // Edit Existing CPT
+        document.getElementById("edit_cpt_selector").addEventListener("change", function() {
+            const selectedData = this.value ? JSON.parse(this.value) : null;
+            if (!selectedData) return;
+
+            document.getElementById("edit_cpt_index").value = selectedData.index;
+            document.getElementById("cpt_name").value = selectedData.name;
+            document.getElementById("cpt_slug").value = selectedData.slug;
+            document.getElementById("cpt_singular").value = selectedData.singular;
+            document.getElementById("cpt_plural").value = selectedData.plural;
+            document.getElementById("cpt_icon").value = selectedData.icon;
+
+            // Set supports checkboxes
+            document.querySelectorAll('#cpt-supports input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = selectedData.supports?.includes(checkbox.value) || false;
+            });
+
+            // Set custom fields
+            fieldsContainer.innerHTML = '';
+            if (selectedData.fields) {
+                selectedData.fields.forEach(field => {
+                    const fieldHTML = `
+                        <div class="custom-field" style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                            <input type="text" class="field-name" value="${field.name}" placeholder="Field Name" required>
+                            <input type="text" class="field-label" value="${field.label}" placeholder="Field Label" required>
+                            <select class="field-type">
+                                <option value="text" ${field.type === 'text' ? 'selected' : ''}>Text</option>
+                                <option value="textarea" ${field.type === 'textarea' ? 'selected' : ''}>Textarea</option>
+                                <option value="image" ${field.type === 'image' ? 'selected' : ''}>Image</option>
+                                <option value="checkbox" ${field.type === 'checkbox' ? 'selected' : ''}>Checkbox</option>
+                            </select>
+                            <button type="button" class="button remove-field">Remove</button>
+                        </div>
+                    `;
+                    fieldsContainer.insertAdjacentHTML("beforeend", fieldHTML);
+                });
+            }
+        });
+
+        // Form Submission
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const formData = {
+                index: document.getElementById("edit_cpt_index").value,
+                name: document.getElementById("cpt_name").value.trim(),
+                slug: document.getElementById("cpt_slug").value.trim(),
+                singular: document.getElementById("cpt_singular").value.trim(),
+                plural: document.getElementById("cpt_plural").value.trim(),
+                icon: document.getElementById("cpt_icon").value,
+                supports: Array.from(document.querySelectorAll('#cpt-supports input:checked')).map(cb => cb.value),
+                fields: Array.from(document.querySelectorAll(".custom-field")).map(field => ({
+                    name: field.querySelector(".field-name").value.trim(),
+                    label: field.querySelector(".field-label").value.trim(),
+                    type: field.querySelector(".field-type").value
+                }))
+            };
+
+            fetch(ajaxurl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    action: 'save_custom_post_type',
+                    security: cptNonce,
+                    data: JSON.stringify(formData)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Success: ' + data.data.message);
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving.');
+            });
+        });
+    });
+    </script>
+    <?php
+}
+
+/*****************************************************************************/
+/********************* AJAX Handler for Saving CPT ********************/
+/*****************************************************************************/
+
+add_action('wp_ajax_save_custom_post_type', 'handle_save_custom_post_type');
+function handle_save_custom_post_type() {
+    check_ajax_referer('save_cpt_nonce', 'security');
+
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Unauthorized access']);
+    }
+
+    $data = json_decode(stripslashes($_POST['data']), true);
+    $json_file = get_template_directory() . '/custom-post-types.json';
+    $existing_cpts = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
+
+    // Validate required fields
+    if (empty($data['name']) || empty($data['slug']) || empty($data['singular']) || empty($data['plural'])) {
+        wp_send_json_error(['message' => 'All required fields must be filled']);
+    }
+
+    // Prepare CPT data
+    $cpt_data = [
+        'name' => sanitize_text_field($data['name']),
+        'slug' => sanitize_title($data['slug']),
+        'singular' => sanitize_text_field($data['singular']),
+        'plural' => sanitize_text_field($data['plural']),
+        'icon' => sanitize_text_field($data['icon']),
+        'supports' => array_map('sanitize_text_field', $data['supports'] ?? []),
+        'fields' => array_map(function($field) {
+            return [
+                'name' => sanitize_text_field($field['name']),
+                'label' => sanitize_text_field($field['label']),
+                'type' => sanitize_text_field($field['type'])
+            ];
+        }, $data['fields'] ?? [])
+    ];
+
+    // Update or add new entry
+    if (isset($data['index']) && $data['index'] !== '' && isset($existing_cpts[$data['index']])) {
+        $existing_cpts[$data['index']] = $cpt_data;
+    } else {
+        $existing_cpts[] = $cpt_data;
+    }
+
+    // Save to file
+    if (file_put_contents($json_file, json_encode($existing_cpts, JSON_PRETTY_PRINT))) {
+        wp_send_json_success(['message' => 'Custom Post Type saved successfully']);
+    } else {
+        wp_send_json_error(['message' => 'Failed to save Custom Post Type']);
+    }
+}
