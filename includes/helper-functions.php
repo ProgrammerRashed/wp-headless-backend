@@ -92,6 +92,9 @@ function render_block_generator_ui() {
                                     <option value="association" <?php selected($field['type'], 'association'); ?>>Association</option>
                                     <option value="complex" <?php selected($field['type'], 'complex'); ?>>Complex</option>
                                     <option value="rich_text" <?php selected($field['type'], 'rich_text'); ?>>Rich Text</option>
+                                    <option value="checkbox" <?php selected($field['type'], 'checkbox'); ?>>Checkbox</option>
+
+
                                 </select>
                                 <input type="text" class="field-name field-item" name="field_name[]" placeholder="Field Name" value="<?php echo esc_attr($field['name']); ?>" required />
                                 <input type="text" class="field-label field-item" name="field_label[]" placeholder="Field Label" value="<?php echo esc_attr($field['label']); ?>" required />
@@ -108,6 +111,11 @@ function render_block_generator_ui() {
                                             placeholder="Max Items" 
                                         />
                                     </div>
+                                <?php endif; ?>
+
+                                <!-- Checkbox -->
+                                <?php if ($field['type'] === 'checkbox'): ?>
+                                    <input type="checkbox" class="field-checkbox field-item" name="field_checkbox[]" value="1" <?php checked(!empty($field['default'])); ?> />
                                 <?php endif; ?>
 
                                 <!-- Options for Select/Radio -->
@@ -211,6 +219,16 @@ add_action('wp_ajax_save_custom_blocks', function() {
     // Check if Block Data Exists
     if (!isset($_POST['block_data'])) {
         wp_send_json_error(['message' => 'Block data is missing!']);
+    }
+
+    // Ensure checkboxes are always stored as true/false
+    if (!empty($block_data['fields']) && is_array($block_data['fields'])) {
+        foreach ($block_data['fields'] as &$field) {
+            if ($field['type'] === 'checkbox') {
+                // Ensure default is explicitly set to false if not checked
+                $field['default'] = isset($field['default']) ? filter_var($field['default'], FILTER_VALIDATE_BOOLEAN) : false;
+            }
+        }
     }
 
     $json_file = get_template_directory() . '/custom-blocks.json';

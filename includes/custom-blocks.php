@@ -59,6 +59,10 @@ function generate_field($field) {
                 ->set_options($field['options'])
                 ->set_default_value(array_key_first($field['options']));
 
+        case 'checkbox': 
+            return Field::make('checkbox', $field['name'], __($field['label'], 'nh'))
+                ->set_option_value('yes');
+
         case 'association':
             $types = array_map(fn($type) => ['type' => trim($type)], $field['types'] ?? ['post']);
             $max = intval($field['max'] ?? 0);
@@ -83,6 +87,8 @@ function generate_field($field) {
             }, $field['sub_fields']));
 
             return $complex_field;
+
+            
 
         default:
             return Field::make('text', $field['name'], __($field['label'], 'nh'));

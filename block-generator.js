@@ -12,21 +12,21 @@ jQuery(document).ready(function($) {
                         <option value="association">Association</option>
                         <option value="complex">Complex</option>
                         <option value="rich_text">Rich Text</option>
+                        <option value="checkbox">Checkbox</option>
                     </select>
                     <input type="text" class="field-name field-item" placeholder="Field Name" required />
                     <input type="text" class="field-label field-item" placeholder="Field Label" required />
-
-                    <!-- Association Parameters -->
-                    <div class="association-params field-item" style="display: none; margin-top: 10px;">
-                        <input type="text" class="association-types field-item" placeholder="Post Types (e.g., post,page)" />
-                        <input type="number" class="association-max field-item" placeholder="Max Items" />
-                    </div>
-
+    
+                    <!-- Checkbox Field (Hidden by Default) -->
+                    <input type="checkbox" class="checkbox-default field-item field-checkbox" />
+                
+    
                     <button type="button" class="remove-field field-item">❌ Delete Field</button>
                 </div>
             </div>
         `);
     });
+    
 
     // Toggle Association Parameters
     $(document).on("change", ".field-type", function() {
@@ -66,6 +66,14 @@ jQuery(document).ready(function($) {
             `);
         } else {
             $field.find(".options").remove();
+        }
+
+
+        // Show/hide checkbox field
+        if (fieldType === "checkbox") {
+            $field.find(".checkbox-container").show();
+        } else {
+            $field.find(".checkbox-container").hide();
         }
     });
 
@@ -127,7 +135,8 @@ jQuery(document).ready(function($) {
         $(".field").each(function() {
             const $field = $(this);
             const fieldType = $field.find(".field-type").val();
-            const fieldName = $field.find(".field-name").val();
+            let fieldName = $field.find(".field-name").val().trim();
+                fieldName = fieldName.toLowerCase().replace(/\s+/g, "_"); // 
             const fieldLabel = $field.find(".field-label").val();
 
             let fieldData = {
@@ -135,6 +144,11 @@ jQuery(document).ready(function($) {
                 name: fieldName,
                 label: fieldLabel
             };
+
+        // Handle Checkbox 
+            if (fieldType === "checkbox") {
+                fieldData.default = $field.find(".checkbox-default").is(":checked");
+            }
 
             // Handle Association Parameters
             if (fieldType === "association") {
@@ -167,8 +181,16 @@ jQuery(document).ready(function($) {
             fields.push(fieldData);
         });
 
+
+        let blockName = $("#block_name").val().trim();
+
+        // Prevent adding "Custom" multiple times
+        if (!blockName.toLowerCase().startsWith("custom ")) {
+            blockName = "Custom " + blockName;
+        }
+
         let block = {
-            name: "Custom " + $("#block_name").val(),
+            name: blockName,
             icon: "layout",
             keywords: $("#block_keywords").val().split(","),
             description: $("#block_description").val(),
