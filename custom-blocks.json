@@ -19,7 +19,6 @@
             }
         ],
         "id": "block_12346"
-
     },
     {
         "name": "Custom Team Members",
@@ -59,5 +58,21 @@
             }
         ],
         "id": "block_12347"
+    },
+    {
+        "name": "Custom Autumn Farley",
+        "icon": "layout",
+        "keywords": [
+            "Laborum Rerum velit"
+        ],
+        "description": "Qui ut dolore ex vel",
+        "fields": [
+            {
+                "type": "text",
+                "name": "modi_voluptatum_dolo",
+                "label": "Vero hic provident "
+            }
+        ],
+        "id": "block_67c297900cf2f3.74167417"
     }
 ]

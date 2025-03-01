@@ -17,10 +17,10 @@ function crb_register_custom_fields() {
     }
 
     foreach ($blocks as $block) {
-        $block_name = __($block['name'], 'nh');
+        $block_name = __($block['name']);
         $block_icon = $block['icon'] ?? 'layout';
         $block_keywords = array_map('__', $block['keywords'] ?? []);
-        $block_description = __($block['description'] ?? '', 'nh');
+        $block_description = __($block['description'] ?? '');
 
         $block_fields = [];
         foreach ($block['fields'] as $field) {
@@ -41,33 +41,33 @@ function crb_register_custom_fields() {
 function generate_field($field) {
     switch ($field['type']) {
         case 'text':
-            return Field::make('text', $field['name'], __($field['label'], 'nh'));
+            return Field::make('text', $field['name'], __($field['label']));
 
         case 'image':
-            return Field::make('image', $field['name'], __($field['label'], 'nh'))
+            return Field::make('image', $field['name'], __($field['label']))
                 ->set_value_type('url');
 
         case 'rich_text':
-            return Field::make('rich_text', $field['name'], __($field['label'], 'nh'));
+            return Field::make('rich_text', $field['name'], __($field['label']));
 
         case 'radio':
-            return Field::make('radio', $field['name'], __($field['label'], 'nh'))
+            return Field::make('radio', $field['name'], __($field['label']))
                 ->set_options($field['options']);
 
         case 'select':
-            return Field::make('select', $field['name'], __($field['label'], 'nh'))
+            return Field::make('select', $field['name'], __($field['label']))
                 ->set_options($field['options'])
                 ->set_default_value(array_key_first($field['options']));
 
         case 'checkbox': 
-            return Field::make('checkbox', $field['name'], __($field['label'], 'nh'))
+            return Field::make('checkbox', $field['name'], __($field['label']))
                 ->set_option_value('yes');
 
         case 'association':
             $types = array_map(fn($type) => ['type' => trim($type)], $field['types'] ?? ['post']);
             $max = intval($field['max'] ?? 0);
         
-            return Field::make('association', $field['name'], __($field['label'], 'nh'))
+            return Field::make('association', $field['name'], __($field['label']))
             ->set_types(array_map(function($type) {
                 return [
                     'type' => 'post',
@@ -77,7 +77,7 @@ function generate_field($field) {
                 ->set_max($max);
 
         case 'complex':
-            $complex_field = Field::make('complex', $field['name'], __($field['label'], 'nh'))
+            $complex_field = Field::make('complex', $field['name'], __($field['label']))
                 ->set_layout($field['layout'] ?? 'tabbed-horizontal');
 
             $group_key = sanitize_title($field['name']); // Generate unique key
@@ -91,7 +91,7 @@ function generate_field($field) {
             
 
         default:
-            return Field::make('text', $field['name'], __($field['label'], 'nh'));
+            return Field::make('text', $field['name'], __($field['label']));
     }
 }
 
