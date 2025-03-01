@@ -178,6 +178,12 @@
     justify-content: center;
     margin: auto !important;
 }
+.checkbox-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
 
 /* Buttons */
 .custom-wrap button[type="button"],

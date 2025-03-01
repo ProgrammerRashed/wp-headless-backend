@@ -60,17 +60,28 @@
         "id": "block_12347"
     },
     {
-        "name": "Custom Autumn Farley",
+        "name": "Custom Hero Banner",
         "icon": "layout",
         "keywords": [
-            "Laborum Rerum velit"
+            "Hero Banner"
         ],
-        "description": "Qui ut dolore ex vel",
+        "description": "This is hero banner",
         "fields": [
             {
                 "type": "text",
-                "name": "modi_voluptatum_dolo",
-                "label": "Vero hic provident "
+                "name": "banner_title",
+                "label": "Banner Title"
+            },
+            {
+                "type": "checkbox",
+                "name": "need_slider",
+                "label": "Need Slider",
+                "default": false
+            },
+            {
+                "type": "image",
+                "name": "banner_image",
+                "label": "Banner Image"
             }
         ],
         "id": "block_67c297900cf2f3.74167417"

@@ -18,7 +18,10 @@ jQuery(document).ready(function($) {
                     <input type="text" class="field-label field-item" placeholder="Field Label" required />
     
                     <!-- Checkbox Field (Hidden by Default) -->
-                    <input type="checkbox" class="checkbox-default field-item field-checkbox" />
+                        <div class="checkbox-container" style="display: none;">
+                            <input type="checkbox" class="field-checkbox field-item" name="field_checkbox[]" value="1">
+                        </div>
+
                 
     
                     <button type="button" class="remove-field field-item">❌ Delete Field</button>
