@@ -17,8 +17,8 @@
 .custom-wrap {
     margin: 20px 20px 0 0;
     padding: 20px;
-    background: #fff;
-    border: 1px solid #ddd;
+    background: #f5f4f4;
+    border: 1px solid #f3f3f3;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -106,6 +106,8 @@
     padding: 10px;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+
 }
 
 .custom-wrap #fields-container .main-fields {
@@ -147,9 +149,9 @@
 
 .custom-wrap .options-container .option {
     display: flex;
-    flex-direction: column;
     gap: 5px;
 }
+
 
 /* Input Fields & Textareas */
 .custom-wrap input[type="text"],

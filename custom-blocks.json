@@ -1,164 +1,78 @@
 [
     {
-        "name": "Custom Featured Posts",
-        "icon": "layout",
-        "keywords": [
-            "Posts",
-            "Featured"
-        ],
-        "description": "A block to select featured posts.",
-        "fields": [
-            {
-                "type": "association",
-                "name": "featured_posts",
-                "label": "Select Featured Posts",
-                "types": [
-                    "member"
-                ],
-                "max": 3
-            }
-        ],
-        "id": "block_12346"
-    },
-    {
-        "name": "Custom Team Members",
-        "icon": "layout",
-        "keywords": [
-            "Team",
-            "Members"
-        ],
-        "description": "A block to showcase team members.",
-        "fields": [
-            {
-                "type": "complex",
-                "name": "team_members",
-                "label": "Team Members",
-                "sub_fields": [
-                    {
-                        "type": "text",
-                        "name": "member_name",
-                        "label": "Member Name"
-                    },
-                    {
-                        "type": "text",
-                        "name": "member_role",
-                        "label": "Member Role"
-                    },
-                    {
-                        "type": "image",
-                        "name": "member_image",
-                        "label": "Member Image"
-                    },
-                    {
-                        "type": "text",
-                        "name": "order",
-                        "label": "Member order"
-                    }
-                ]
-            }
-        ],
-        "id": "block_12347"
-    },
-    {
-        "name": "Custom Hero Banner",
-        "icon": "layout",
-        "keywords": [
-            "Hero Banner"
-        ],
-        "description": "This is hero banner",
-        "fields": [
-            {
-                "type": "text",
-                "name": "banner_title",
-                "label": "Banner Title"
-            },
-            {
-                "type": "checkbox",
-                "name": "need_slider",
-                "label": "Need Slider",
-                "default": false
-            },
-            {
-                "type": "image",
-                "name": "banner_image",
-                "label": "Banner Image"
-            }
-        ],
-        "id": "block_67c297900cf2f3.74167417"
-    },
-    {
-        "name": "Custom FAQ Block",
-        "icon": "layout",
-        "keywords": [
-            "faq block"
-        ],
-        "description": "This is a faq block",
-        "fields": [
-            {
-                "type": "text",
-                "name": "title",
-                "label": "Section Title"
-            }
-        ],
-        "id": "block_67c440186dd180.72293235"
-    },
-    {
         "name": "Custom Test Block",
         "icon": "layout",
         "keywords": [
-            "Block"
+            "Test Block"
         ],
-        "description": "This is a test block",
+        "description": "This is a test Block",
         "fields": [
             {
                 "type": "text",
-                "name": "test_block",
-                "label": "Test Block Title"
-            }
-        ],
-        "id": "block_67da749460fd63.82404702"
-    },
-    {
-        "name": "Custom Theme Option",
-        "icon": "layout",
-        "keywords": [
-            "Theme Option"
-        ],
-        "description": "This is theme opton test",
-        "fields": [
+                "name": "test_text_field",
+                "label": "Test Text Field"
+            },
             {
-                "type": "text",
-                "name": "theme_option_title",
-                "label": "Theme Option Title"
+                "type": "image",
+                "name": "test_image_field",
+                "label": "Test Image Field"
+            },
+            {
+                "type": "radio",
+                "name": "test_radio_button",
+                "label": "Test Radio Button",
+                "options": {
+                    "Yes": "Yes",
+                    "No": "No"
+                }
+            },
+            {
+                "type": "select",
+                "name": "test_select_field",
+                "label": "Test Select Field",
+                "options": {
+                    "Select Option One": "Select Option One",
+                    "Select Option Two": "Select Option Two"
+                }
+            },
+            {
+                "type": "association",
+                "name": "test_associaltion_field",
+                "label": "Test Associaltion Field",
+                "types": [
+                    "post"
+                ],
+                "max": 1
+            },
+            {
+                "type": "complex",
+                "name": "test_complex_field",
+                "label": "Test Complex Field",
+                "sub_fields": [
+                    {
+                        "type": "text",
+                        "name": "sub_field_one",
+                        "label": "Sub Field One"
+                    },
+                    {
+                        "type": "image",
+                        "name": "sub_field_two",
+                        "label": "Sub Field Two"
+                    }
+                ]
+            },
+            {
+                "type": "rich_text",
+                "name": "rich_text",
+                "label": "Rich Text"
             },
             {
                 "type": "checkbox",
-                "name": "display_nav",
-                "label": "Display Navbar",
+                "name": "check_it",
+                "label": "Check it",
                 "default": false
             }
         ],
-        "id": "block_67da764e40a2d9.63963640"
-    },
-    {
-        "name": "Custom Check Error",
-        "icon": "layout",
-        "keywords": [
-            "Error Check"
-        ],
-        "description": "This s a block to test error",
-        "fields": [
-            {
-                "type": "text",
-                "name": "check_error",
-                "label": "Check Error"
-            },
-            {
-                "type": "text",
-                "name": "error_check_2",
-                "label": "Error Check 2"
-            }
-        ],
-        "id": "block_67da76e4deb2c6.54138067"
+        "id": "block_67da9ed80ed8f6.59277813"
     }
 ]

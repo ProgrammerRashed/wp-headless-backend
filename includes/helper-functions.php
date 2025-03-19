@@ -130,8 +130,6 @@ function render_block_generator_ui() {
                                     <option value="complex" <?php selected($field['type'], 'complex'); ?>>Complex</option>
                                     <option value="rich_text" <?php selected($field['type'], 'rich_text'); ?>>Rich Text</option>
                                     <option value="checkbox" <?php selected($field['type'], 'checkbox'); ?>>Checkbox</option>
-
-
                                 </select>
                                 <input type="text" class="field-name field-item" name="field_name[]" placeholder="Field Name" value="<?php echo esc_attr($field['name']); ?>" required />
                                 <input type="text" class="field-label field-item" name="field_label[]" placeholder="Field Label" value="<?php echo esc_attr($field['label']); ?>" required />
@@ -151,6 +149,9 @@ function render_block_generator_ui() {
                                 <?php endif; ?>
 
                              
+                                <button type="button" class="remove-field field-item">❌ Delete Field</button>
+                            </div>
+
 
                                 <!-- Options for Select/Radio -->
                                 <?php if (in_array($field['type'], ['select', 'radio']) && !empty($field['options'])): ?>
@@ -158,7 +159,7 @@ function render_block_generator_ui() {
                                         <h4>Options</h4>
                                         <div class="options-container">
                                             <?php foreach ($field['options'] as $key => $value): ?>
-                                                <div class="option">
+                                                <div class="option field-item">
                                                     <input type="text" class="option-key" 
                                                         name="options[<?php echo esc_attr($field['name']); ?>][<?php echo esc_attr($key); ?>][key]" 
                                                         value="<?php echo esc_attr($key); ?>" 
@@ -177,8 +178,6 @@ function render_block_generator_ui() {
                                     </div>
                                 <?php endif; ?>
 
-                                <button type="button" class="remove-field field-item">❌ Delete Field</button>
-                            </div>
 
                             <!-- Sub Fields for Complex -->
                             <?php if ($field['type'] === 'complex' && !empty($field['sub_fields'])): ?>
