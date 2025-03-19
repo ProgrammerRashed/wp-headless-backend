@@ -150,10 +150,7 @@ function render_block_generator_ui() {
                                     </div>
                                 <?php endif; ?>
 
-                                <!-- Checkbox -->
-                                <div class="checkbox-container" style="display: <?php echo ($field['type'] === 'checkbox') ? 'block' : 'none'; ?>;">
-                                    <input type="checkbox" class="field-checkbox field-item" name="field_checkbox[]" value="1" <?php checked(!empty($field['default'])); ?> />
-                                </div>
+                             
 
                                 <!-- Options for Select/Radio -->
                                 <?php if (in_array($field['type'], ['select', 'radio']) && !empty($field['options'])): ?>

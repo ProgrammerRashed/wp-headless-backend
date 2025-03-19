@@ -1,7 +1,7 @@
 [
     {
         "name": "Custom Featured Posts",
-        "icon": "admin-post",
+        "icon": "layout",
         "keywords": [
             "Posts",
             "Featured"
@@ -13,7 +13,7 @@
                 "name": "featured_posts",
                 "label": "Select Featured Posts",
                 "types": [
-                    "post"
+                    "member"
                 ],
                 "max": 3
             }
@@ -85,5 +85,59 @@
             }
         ],
         "id": "block_67c297900cf2f3.74167417"
+    },
+    {
+        "name": "Custom FAQ Block",
+        "icon": "layout",
+        "keywords": [
+            "faq block"
+        ],
+        "description": "This is a faq block",
+        "fields": [
+            {
+                "type": "text",
+                "name": "title",
+                "label": "Section Title"
+            }
+        ],
+        "id": "block_67c440186dd180.72293235"
+    },
+    {
+        "name": "Custom Test Block",
+        "icon": "layout",
+        "keywords": [
+            "Block"
+        ],
+        "description": "This is a test block",
+        "fields": [
+            {
+                "type": "text",
+                "name": "test_block",
+                "label": "Test Block Title"
+            }
+        ],
+        "id": "block_67da749460fd63.82404702"
+    },
+    {
+        "name": "Custom Theme Option",
+        "icon": "layout",
+        "keywords": [
+            "Theme Option"
+        ],
+        "description": "This is theme opton test",
+        "fields": [
+            {
+                "type": "text",
+                "name": "theme_option_title",
+                "label": "Theme Option Title"
+            },
+            {
+                "type": "checkbox",
+                "name": "display_nav",
+                "label": "Display Navbar",
+                "default": false
+            }
+        ],
+        "id": "block_67da764e40a2d9.63963640"
     }
 ]

@@ -17,11 +17,7 @@ jQuery(document).ready(function($) {
                     <input type="text" class="field-name field-item" placeholder="Field Name" required />
                     <input type="text" class="field-label field-item" placeholder="Field Label" required />
     
-                    <!-- Checkbox Field (Hidden by Default) -->
-                        <div class="checkbox-container" style="display: none;">
-                            <input type="checkbox" class="field-checkbox field-item" name="field_checkbox[]" value="1">
-                        </div>
-
+                  
                 
     
                     <button type="button" class="remove-field field-item">❌ Delete Field</button>
@@ -71,13 +67,6 @@ jQuery(document).ready(function($) {
             $field.find(".options").remove();
         }
 
-
-        // Show/hide checkbox field
-        if (fieldType === "checkbox") {
-            $field.find(".checkbox-container").show();
-        } else {
-            $field.find(".checkbox-container").hide();
-        }
     });
 
     // Add Option Button (for Select/Radio Fields)
