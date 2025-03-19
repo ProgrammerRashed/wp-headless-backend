@@ -1,6 +1,6 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
     // Add Field Button
-    $("#add-field").click(function() {
+    $("#add-field").click(function () {
         $("#fields-container").append(`
             <div class="field">
                 <div class="main-fields">
@@ -16,27 +16,39 @@ jQuery(document).ready(function($) {
                     </select>
                     <input type="text" class="field-name field-item" placeholder="Field Name" required />
                     <input type="text" class="field-label field-item" placeholder="Field Label" required />
-    
-                  
-                
-    
                     <button type="button" class="remove-field field-item">❌ Delete Field</button>
                 </div>
             </div>
         `);
+
+        // Trigger change event for the newly added field to handle its options (e.g., association fields)
+        $(".field-type").last().trigger("change");
     });
-    
 
     // Toggle Association Parameters
-    $(document).on("change", ".field-type", function() {
+    $(document).on("change", ".field-type", function () {
         const fieldType = $(this).val();
         const $field = $(this).closest(".field");
+        const $mainFields = $field.find(".main-fields");
 
-        // Show/hide association parameters
+        // Show/hide association parameters for "association" field type
         if (fieldType === "association") {
-            $field.find(".association-params").show();
+            // Check if association params are already added
+            // Inside the "association" field type check
+            if (!$field.find(".association-params").length) {
+                // Insert before the delete button
+                $mainFields.find(".remove-field").before(`
+        <div class="association-params field-item">
+            <input type="text" class="association-types field-item" 
+                   value="" placeholder="Post Types (comma-separated)" />
+            <input type="number" class="association-max field-item" 
+                   value="0" placeholder="Max Items" />
+        </div>
+    `);
+            }
         } else {
-            $field.find(".association-params").hide();
+            // Remove association parameters if not "association" field type
+            $field.find(".association-params").remove();
         }
 
         // Handle Sub-Fields (Complex Fields)
@@ -66,11 +78,10 @@ jQuery(document).ready(function($) {
         } else {
             $field.find(".options").remove();
         }
-
     });
 
     // Add Option Button (for Select/Radio Fields)
-    $(document).on("click", ".add-option", function() {
+    $(document).on("click", ".add-option", function () {
         const $container = $(this).siblings(".options-container");
 
         $container.append(`
@@ -83,12 +94,12 @@ jQuery(document).ready(function($) {
     });
 
     // Remove Option
-    $(document).on("click", ".remove-option", function() {
+    $(document).on("click", ".remove-option", function () {
         $(this).closest(".option").remove();
     });
 
     // Add Sub Field Button (for Complex Fields)
-    $(document).on("click", ".add-sub-field", function() {
+    $(document).on("click", ".add-sub-field", function () {
         const $container = $(this).siblings(".sub-fields-container");
 
         $container.append(`
@@ -110,25 +121,25 @@ jQuery(document).ready(function($) {
     });
 
     // Remove Sub Field
-    $(document).on("click", ".remove-sub-field", function() {
+    $(document).on("click", ".remove-sub-field", function () {
         $(this).closest(".sub-field").remove();
     });
 
     // Remove Field
-    $(document).on("click", ".remove-field", function() {
+    $(document).on("click", ".remove-field", function () {
         $(this).closest(".field").remove();
     });
 
     // Handle Form Submission
-    $("#block-generator-form").submit(function(event) {
+    $("#block-generator-form").submit(function (event) {
         event.preventDefault();
 
         let fields = [];
-        $(".field").each(function() {
+        $(".field").each(function () {
             const $field = $(this);
             const fieldType = $field.find(".field-type").val();
             let fieldName = $field.find(".field-name").val().trim();
-                fieldName = fieldName.toLowerCase().replace(/\s+/g, "_"); // 
+            fieldName = fieldName.toLowerCase().replace(/\s+/g, "_"); // Normalize field name
             const fieldLabel = $field.find(".field-label").val();
 
             let fieldData = {
@@ -137,7 +148,7 @@ jQuery(document).ready(function($) {
                 label: fieldLabel
             };
 
-        // Handle Checkbox 
+            // Handle Checkbox
             if (fieldType === "checkbox") {
                 fieldData.default = $field.find(".checkbox-default").is(":checked");
             }
@@ -151,7 +162,7 @@ jQuery(document).ready(function($) {
             // Handle Sub-Fields (Complex)
             if (fieldType === "complex") {
                 fieldData.sub_fields = [];
-                $field.find(".sub-field").each(function() {
+                $field.find(".sub-field").each(function () {
                     fieldData.sub_fields.push({
                         type: $(this).find(".sub-field-type").val(),
                         name: $(this).find(".sub-field-name").val(),
@@ -163,7 +174,7 @@ jQuery(document).ready(function($) {
             // Handle Options (Select/Radio)
             if (["select", "radio"].includes(fieldType)) {
                 fieldData.options = {};
-                $field.find(".option").each(function() {
+                $field.find(".option").each(function () {
                     const key = $(this).find(".option-key").val();
                     const value = $(this).find(".option-value").val();
                     fieldData.options[key] = value;
@@ -172,7 +183,6 @@ jQuery(document).ready(function($) {
 
             fields.push(fieldData);
         });
-
 
         let blockName = $("#block_name").val().trim();
 
@@ -197,7 +207,7 @@ jQuery(document).ready(function($) {
             security: block_ajax.nonce,
             block_data: JSON.stringify(block),
             edit_block_id: editBlockId
-        }, function(response) {
+        }, function (response) {
             if (response.success) {
                 alert(response.data.message);
                 location.reload();

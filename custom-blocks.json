@@ -139,5 +139,26 @@
             }
         ],
         "id": "block_67da764e40a2d9.63963640"
+    },
+    {
+        "name": "Custom Check Error",
+        "icon": "layout",
+        "keywords": [
+            "Error Check"
+        ],
+        "description": "This s a block to test error",
+        "fields": [
+            {
+                "type": "text",
+                "name": "check_error",
+                "label": "Check Error"
+            },
+            {
+                "type": "text",
+                "name": "error_check_2",
+                "label": "Error Check 2"
+            }
+        ],
+        "id": "block_67da76e4deb2c6.54138067"
     }
 ]
