@@ -1,45 +1,80 @@
 <?php
+
 /**
- * Headless WP Theme by Notionhive functions and definitions.
+ * headless functions and definitions
  *
- * @package WordPress
- * @subpackage Headless_WP_Notionhive
- * @since 1.0
+ * @link https://developer.wordpress.org/themes/basics/theme-functions/
+ *
+ * @package headless
  */
 
-// Adds theme support for post formats.
-function headless_wp_post_format_setup() {
-    add_theme_support('post-formats', array('aside', 'audio', 'chat', 'gallery', 'image', 'link', 'quote', 'status', 'video'));
+if ( !defined( '_S_VERSION' ) ) {
+    // Replace the version number of the theme on each release.
+    define( '_S_VERSION', '1.0.0' );
 }
-add_action('after_setup_theme', 'headless_wp_post_format_setup');
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+define( 'THEMEROOT', get_stylesheet_directory_uri() );
+define( 'IMG', THEMEROOT . '/dist/img' );
 
-
-// Registers custom block styles.
-function headless_wp_block_styles() {
-    register_block_style(
-        'core/list',
-        array(
-            'name'         => 'checkmark-list',
-            'label'        => __('Checkmark', 'headless-wp-notionhive'),
-            'inline_style' => '
-            ul.is-style-checkmark-list {
-                list-style-type: "\2713";
-            }
-            ul.is-style-checkmark-list li {
-                padding-inline-start: 1ch;
-            }',
-        )
-    );
+add_action( 'after_setup_theme', 'theme_load' );
+function theme_load() {
+    require_once 'vendor/autoload.php';
+    \Carbon_Fields\Carbon_Fields::boot();
 }
-add_action('init', 'headless_wp_block_styles');
+
+/**
+ * Setup
+ *
+ * @return void
+ */
+
+add_theme_support( 'post-thumbnails' );
 
 
-// Require necessary files from the includes folder
-require_once get_template_directory() . '/includes/enqueue.php';
-require_once get_template_directory() . '/includes/custom-blocks.php';
-require_once get_template_directory() . '/includes/custom-posts.php';
-require_once get_template_directory() . '/includes/helper-functions.php';
-require_once get_template_directory() . '/includes/post-meta.php';
+/**
+ * Enqueue scripts and styles for admin
+ */
 
+function headless_admin_scripts() {
+    wp_enqueue_style( 'headless-admin-style', get_template_directory_uri() . '/admin.css', array(), _S_VERSION, 'all' );
+}
 
+add_action( 'admin_enqueue_scripts', 'headless_admin_scripts' );
+
+// add global inc files
+require_once get_template_directory() . '/inc/global.php';
+
+/**
+ * Blocks
+ */
+require get_template_directory() . '/inc/blocks.php';
+
+/**
+ * Custom Post Types
+ */
+
+require get_template_directory() . '/inc/cpt.php';
+
+/**
+ * Post Meta
+ */
+
+require get_template_directory() . '/inc/post-meta.php';
+
+/**
+ * Rest API Routes
+ */
+require get_template_directory() . '/webhook/next.php';
+require get_template_directory() . '/inc/rest-api/nh_register_job_apply_endpoint.php';
+require get_template_directory() . '/inc/rest-api/nh_register_contact_endpoint.php';
+
+function add_noindex() {
+    if ( is_front_page() || is_home() || is_category() || is_tag() || is_search() || is_archive() || is_single() ) {
+        echo '<meta name="robots" content="noindex, follow">';
+    }
+}
+add_action( 'wp_head', 'add_noindex' );
+
+add_filter( 'xmlrpc_enabled', '__return_false' );
