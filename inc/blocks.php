@@ -850,12 +850,7 @@ function headless_register_components()
             ->add_fields(array(
                 Field::make('text', 'contact_email', __('Enter Your Contact Email', 'nh')),
                 Field::make('text', 'main_website_url', __('Main Website Url', 'nh')),
-                Field::make('textarea', 'blank_post_types', 'Post Types with Blank URL (comma separated)'),
-                Field::make('complex', 'custom_post_type_urls', 'Custom URLs for Post Types')
-                    ->add_fields([
-                        Field::make('text', 'post_type', 'Post Type Slug'),
-                        Field::make('text', 'url', 'Custom URL Base'),
-                    ]),
+              
             ))
     );
 

@@ -1,8 +1,9 @@
 <?php
 // DISABLE FRONTEND 
-function disable_frontend_for_headless_forbidden() {
+function disable_frontend_for_headless_forbidden()
+{
     // Allow admin, login, ajax, and REST API (GraphQL) requests
-    if ( is_admin() || defined('REST_REQUEST') && REST_REQUEST ) {
+    if (is_admin() || defined('REST_REQUEST') && REST_REQUEST) {
         return; // allow admin and API requests
     }
 
@@ -39,7 +40,7 @@ add_filter('register_post_type_args', 'add_graphql_support_to_posts', 10, 2);
 
 
 // REDIRECT USER TO FRONTEND 
-add_action('admin_menu', function() {
+add_action('admin_menu', function () {
     add_menu_page(
         'Post Type URL Control',
         'Post Type URLs',
@@ -49,7 +50,8 @@ add_action('admin_menu', function() {
     );
 });
 
-function pt_url_control_page_html() {
+function pt_url_control_page_html()
+{
     if (!current_user_can('manage_options')) {
         return;
     }
@@ -63,34 +65,43 @@ function pt_url_control_page_html() {
 
     $saved = get_option('pt_url_control_data', []);
     $post_types = get_post_types(['public' => true], 'objects');
-
     ?>
     <div class="wrap">
         <h1>Post Type URL Control</h1>
         <form method="post">
             <?php wp_nonce_field('pt_url_control_save', 'pt_url_control_nonce'); ?>
-            <table class="widefat fixed" style="max-width:600px;">
+            <table class="widefat fixed" style="max-width:800px;">
                 <thead>
                     <tr>
                         <th>Post Type</th>
                         <th>Blank URL</th>
                         <th>Custom URL Base</th>
+                        <th>Include in Sitemap</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($post_types as $pt_slug => $pt_obj): 
-                        $blank = !empty($saved[$pt_slug]['blank']);
-                        $custom_url = $saved[$pt_slug]['custom_url'] ?? '';
-                    ?>
-                    <tr>
-                        <td><strong><?php echo esc_html($pt_obj->labels->singular_name); ?> (<?php echo esc_html($pt_slug); ?>)</strong></td>
-                        <td style="text-align:center;">
-                            <input type="checkbox" name="pt_url_control[<?php echo esc_attr($pt_slug); ?>][blank]" <?php checked($blank); ?> />
-                        </td>
-                        <td>
-                            <input type="text" style="width:100%;" name="pt_url_control[<?php echo esc_attr($pt_slug); ?>][custom_url]" value="<?php echo esc_attr($custom_url); ?>" placeholder="https://example.com/custom-path" />
-                        </td>
-                    </tr>
+                    <?php foreach ($post_types as $pt_slug => $pt_obj):
+                        $settings = $saved[$pt_slug] ?? [];
+                        $blank = !empty($settings['blank']);
+                        $custom_url = $settings['custom_url'] ?? '';
+                        $include_in_sitemap = !empty($settings['sitemap']);
+                        ?>
+                        <tr>
+                            <td><strong><?php echo esc_html($pt_obj->labels->singular_name); ?>
+                                    (<?php echo esc_html($pt_slug); ?>)</strong></td>
+                            <td style="text-align:center;">
+                                <input type="checkbox" name="pt_url_control[<?php echo esc_attr($pt_slug); ?>][blank]" <?php checked($blank); ?> />
+                            </td>
+                            <td>
+                                <input type="text" style="width:100%;"
+                                    name="pt_url_control[<?php echo esc_attr($pt_slug); ?>][custom_url]"
+                                    value="<?php echo esc_attr($custom_url); ?>"
+                                    placeholder="https://example.com/custom-path" />
+                            </td>
+                            <td style="text-align:center;">
+                                <input type="checkbox" name="pt_url_control[<?php echo esc_attr($pt_slug); ?>][sitemap]" <?php checked($include_in_sitemap); ?> />
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -101,8 +112,10 @@ function pt_url_control_page_html() {
     <?php
 }
 
+
 // 1. Filter to customize frontend URLs per post type
-function my_custom_frontend_view_url($url, $post) {
+function my_custom_frontend_view_url($url, $post)
+{
     $post_type = get_post_type($post);
     $settings = get_option('pt_url_control_data', []);
 
@@ -136,7 +149,8 @@ add_filter('preview_post_link', 'my_custom_frontend_view_url', 10, 2);
 add_filter('page_row_actions', 'customize_view_link', 10, 2);
 add_filter('post_row_actions', 'customize_view_link', 10, 2);
 
-function customize_view_link($actions, $post) {
+function customize_view_link($actions, $post)
+{
     $original_url = get_permalink($post);
     $custom_url = my_custom_frontend_view_url($original_url, $post);
 
@@ -263,3 +277,63 @@ function remove_comments_meta_boxes()
 }
 add_action('add_meta_boxes', 'remove_comments_meta_boxes');
 
+
+
+
+// SITEMAPS 
+// Register GraphQL-only sitemap entries with metadata
+add_action('graphql_register_types', function () {
+    register_graphql_object_type('SitemapEntry', [
+        'description' => 'A sitemap entry with metadata',
+        'fields' => [
+            'url' => ['type' => 'String', 'description' => 'Frontend URL'],
+            'lastModified' => ['type' => 'String', 'description' => 'Last modified date (ISO8601)'],
+            'changeFrequency' => ['type' => 'String', 'description' => 'Update frequency'],
+            'priority' => ['type' => 'Float', 'description' => 'Priority in sitemap'],
+        ],
+    ]);
+
+    register_graphql_field('RootQuery', 'customSitemapUrls', [
+        'type' => ['list_of' => 'SitemapEntry'],
+        'description' => 'Custom sitemap entries with metadata',
+        'resolve' => function () {
+            $entries = [];
+            $saved = get_option('pt_url_control_data', []);
+
+            // Dynamically collect only enabled post types
+            $post_types = array_keys(array_filter($saved, function ($settings) {
+                return !empty($settings['sitemap']);
+            }));
+
+            if (empty($post_types))
+                return [];
+
+            $query = new WP_Query([
+                'post_type' => $post_types,
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+            ]);
+
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    $post = get_post();
+                    $url = my_custom_frontend_view_url(get_permalink(), $post);
+
+                    if (!empty($url)) {
+                        $entries[] = [
+                            'url' => esc_url($url),
+                            'lastModified' => get_the_modified_date('c', $post),
+                            'changeFrequency' => 'weekly',
+                            'priority' => 0.8,
+                        ];
+                    }
+                }
+            }
+            wp_reset_postdata();
+
+            return $entries;
+        }
+    ]);
+
+});
